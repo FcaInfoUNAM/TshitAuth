@@ -174,6 +174,14 @@ def signUp():
 2. Explica
    - ¿por qué recibimos pasamos passwd y passwd2?
    - ¿Cómo validamos que se reciban todos los datos necesarios?
+
+3. Agrega el blueprint a main.py
+```python
+from app.modules.auth import auth
+...
+...
+app.register_blueprint(auth)
+```
 ## Paso4 (pruebas)
 1. Utilizando Postman o algun otro método de consultar añade al body lo siguiente:
 ```json
