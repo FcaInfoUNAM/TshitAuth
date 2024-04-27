@@ -1,0 +1,65 @@
+
+Identifica qué hace la función Snowflake
+La función snowflake probablemente genera un identificador único usando el algoritmo Snowflake
+que es un esquema de generación de identificadores distribuidos
+popularmente utilizado en sistemas distribuidos y bases de datos de gran escala.
+
+
+Analiza el código y explica cómo crees que descifraremos la contraseña posteriormente
+Supongo que al haber  llaves, una debe ser pública y la otra privada, para la pública todos los sistemas
+relacionados tienen el código que la decifra, mientras que en la privada solo el usuario final
+es quien tiene el código para saber cuál es.
+Creo que usaremos algún tipo de tabla de valores hash o un algoritmo de cifrado.
+
+Explica
+   - ¿por qué recibimos pasamos passwd y passwd2?
+   Porque ambas son contraseñas que deben compararse para saber si son iguales y en caso de serlo
+   se podrá saber la información que es protegida por las mismas llaves.
+
+   - ¿Cómo validamos que se reciban todos los datos necesarios?
+    Porque de esa forma podemos tener el control de quién está accediendo a los datos y con qué está
+    accediendo, esos registros se guardan en una base de datos.
+
+
+¿Por qué revisamos si hay un archivo generado?
+Revisamos si hay un archivo generado para evitar sobrescribir datos existentes.
+Si el archivo ya existe, significa que las credenciales ya se han guardado previamente y no necesitamos volver a guardarlas.
+
+¿Dónde generamos un archivo?
+Generamos un archivo en la línea de código donde escribimos las credenciales en el servidor.
+
+¿Cuál es el valor que se asigna como nombre al archivo?
+El valor asignado como nombre de archivo es el ID del usuario.
+Esto se logra concatenando el ID del usuario con la extensión ".json", como se muestra en el código anterior.
+
+¿Cómo evitamos guardar la contraseña en el archivo?
+Para evitar guardar la contraseña en el archivo, primero ciframos la contraseña antes de escribirla en el archivo. El cifrado se realiza utilizando RSA.
+La contraseña cifrada se almacena en el archivo y se descifra solo cuando se necesita validar la contraseña.
+
+¿Cómo hacemos el descifrado de la contraseña guardada en la base de datos?
+El descifrado de la contraseña se realiza utilizando RSA. En resumen, el proceso es el siguiente:
+Leemos la clave privada RSA del archivo.
+Cargamos la clave privada.
+Convertimos la contraseña cifrada de Base64 a datos binarios.
+Desciframos los datos binarios utilizando la clave privada.
+Convertimos el resultado descifrado en texto legible.
+
+¿Cómo validas que te pasen los datos requeridos para el logueo?
+Se valida que se pasen los datos requeridos para el inicio de sesión mediante un bucle for que itera
+sobre una lista de claves (authKeys) que se esperan en el cuerpo de la solicitud JSON.
+Si alguna de estas claves no está presente en la solicitud, se devuelve un mensaje de error indicando que falta esa clave en la solicitud.
+
+¿Qué devuelve la función?
+La función devuelve una respuesta JSON. Si la autenticación es exitosa
+devuelve el ID del usuario y un código de estado HTTP 200. Si la autenticación falla
+devuelve un mensaje de error y un código de estado HTTP correspondiente
+(401 para contraseña incorrecta, por ejemplo).
+
+¿Cómo usarías el valor devuelto?
+Puedes usar el valor devuelto para manejar la autenticación en el lado del cliente.
+Por ejemplo, si estás escribiendo una aplicación web, puedes redirigir al usuario a una página de
+inicio de sesión exitosa si recibes un código de estado 200 junto con el ID del usuario.
+Si recibes un código de estado 401, puedes mostrar un mensaje de error al usuario indicando que la
+contraseña es incorrecta.
+
+
