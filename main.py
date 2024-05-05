@@ -1,13 +1,11 @@
-from flask import Flask
-from flask import Blueprint
-from flask import request
-import json
+from app.modules.auth import auth
 from app.modules.proveedores import proveedores
+from flask import Flask
 
 app = Flask(__name__)
+app.register_blueprint(auth)
 app.register_blueprint(proveedores)
-config = json.load( open('./config.json'))
-
+config = json.load(open('./config.json'))
 
 @app.route("/")
 
