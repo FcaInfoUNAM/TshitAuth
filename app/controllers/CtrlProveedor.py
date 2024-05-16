@@ -51,4 +51,3 @@ class CtrlProveedor(CtrlMain):
             self.proveedor.setId(p[0])
             self.proveedores.append(vars(self.proveedor))
         return {"get":get,"data":self.proveedores}
-

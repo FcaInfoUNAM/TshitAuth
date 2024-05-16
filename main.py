@@ -3,9 +3,11 @@ from flask import Blueprint
 from flask import request
 import json
 from app.modules.proveedores import proveedores
+from app.modules.auth import auth
 
 app = Flask(__name__)
 app.register_blueprint(proveedores)
+app.register_blueprint(auth)
 config = json.load( open('./config.json'))
 
 
@@ -36,5 +38,3 @@ def productos():
 @app.route("/v1/proveedor/<id>",methods=['DELETE'])
 def deleteProveedor():
     return "hello"
-
-    
