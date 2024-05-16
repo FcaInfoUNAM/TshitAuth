@@ -1,0 +1,82 @@
+Martínez Mendoza Roberto David
+
+CREAR UN NUEVO USUARIO 
+    PASO 1 (MODELO)
+        
+        - ¿Por qué usamos un método aparte para generar un ID?
+            Se utiliza otro método porque eso permite una mayor flexibilidad y control de cuándo y cómo
+            se asigna el ID.
+
+    PASO 2 (CONTROLADOR)
+
+        - ¿Qué hace la función snowflake?
+            Genera identificadores únicos utilizando el algoritmo Snowflake.
+        - ¿Cómo crees que descifraremos la contraseña posteriormente?
+            Recuperando la contraseña cifrada, decodificarla de base64 y luego hacer uso de la llave 
+            privada para descifrarla.
+
+    PASO 3 (ENRUTAMIENTO CON BLUEPRINT)
+
+        - ¿Por qué recibimos pasamos passwd y passwd2?
+            Se utiliza para verificar que la contraseña ingresada coincide con la confirmación de la
+            contraseña durante el registro. 
+        - ¿Cómo validamos que se reciban todos los datos necesarios?
+            Se verifica si cada campo necesario está presente en la solicitud JSON, se itera a través de
+            la lista "Keys" que contiene los nombres de los campos.
+
+    PASO 4 (PRUEBAS)
+    
+        - Explica en qué parte del código mandamos el mensaje de error.
+            for key in keys:
+                if not key in r:
+                    return '{"msg":"missing' +f'"{key}"'+'}',409
+            En la función signUp(), cuando entra a la iteración sobre cada clave en la lista "Keys" y no 
+            están presentes todas las claves en la solicitud JSON y, por lo tanto, devuelve un mensaje de 
+            error indicando que falta el campo y un código de estado HTTP 409.
+        - ¿En qué parte del código manejamos la contraseña duplicada?
+            if (r["passwd"] != r["passwd2"]):
+                return '{"msg":"password not match"}', 409
+            En la función signUp(), cuando se compara si los valores de las contraseñas proporcionadas en la 
+            solicitud JSON son iguales.
+        - ¿Por qué la contraseña tiene un valor diferente al que mandamos en el request?
+            Debido al proceso de cifrado de la contraseña, el valor de la contraseña se cifra antes de que sea
+            almacenada en la base de datos.
+
+GENERAR LA AUTENTICACIÓN 
+    PASO 1 (CONTROLADOR)
+        
+        - ¿Por qué revisamos si hay un archivo generado?
+            Se hace esa revisión para comprobar si las credenciales del usuario ya han sido almacenadas previamente
+            en el servidor.
+        - ¿Dónde generamos un archivo?
+            with open(path+"/"+f"{self.user.id}.json", 'w') as file:
+                json.dump(vars(self.user), file)
+        - ¿Cuál es el valor que se asigna como nombre al archivo?
+            Es el ID único del usuario.
+        - ¿Cómo evitamos guardar la contraseña en el archivo?
+            Se asigna una cadena vacía al atributo de la contraseña del objeto de usuario.
+            En el código lo podemos ver en 'self.user.passwd = "" '. 
+        - ¿Cómo hacemos el descifrado de la contraseña guardada en la base de datos?
+            Primero se carga la clave privada RSA del servidor, luego decodificamos la contraseña cifrada y por ultimo,
+            se descifra utilizando la clave privada RSA.
+            
+    PASO 2 (ENRUTAMIENTO)
+
+        - ¿Cómo válidas que te pasen los datos requeridos para el logueo?
+            authKeys=["email","passwd"]
+            for key in authKeys:
+                if not key in r:
+                    return '{"msg":"missing' +f'{key}"'+'}',401
+            Esta iteración verifica si los datos necesarios están presentes en la solicitud.
+        - ¿Qué devuelve la función?
+            Si es exitosa, devuelve un objeto JSON con los datos del usuario junto con el código 200. De lo contrario
+            devuelve un mensaje de error y el código de estado 401.
+        - ¿Cómo usarías el valor devuelto?
+            De ser exitosa podría ocuparla para personalizar la experiencia del usuario en la aplicación. En caso de 
+            no serlo marcaría el error y mandaría al usuario a la página de inicio de sesión para que intente de nuevo.
+
+   PASO 3 (PRUEBAS)
+
+        - Al marcarte que no tienes acceso agrega lo siguiente al final de la url ?authKey= y el id del usuario previamente
+        creado, explica qué sucedió
+            Validar la identidad del usuario, nos da acceso y retorna los datos en formato JSON
