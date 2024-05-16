@@ -21,10 +21,14 @@ def insertProveedor():
 @proveedores.route("/v1/proveedor")
 def getAll():
     ctrl= CtrlProveedor()
+    authKey = request.args.get("authKey")
+    if not(ctrl.kerberos(authKey)):
+        return {"msg":"unauthorized"},409
     get = ctrl.getAll()
     if(get["get"]["code"]!=200):
         return json.dumps(get["get"]),get["get"]["code"]
     return json.dumps((get["data"])),200
+
 
 #BORRAR , BUSCARID Y EDITAR PROVEEDORES
 @proveedores.route("/v1/proveedor/<id>",methods=['DELETE','GET','PUT'])

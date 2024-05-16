@@ -1,0 +1,43 @@
+
+¿Por qué usamos un método aparte para generar un ID?
+    R: Usamos otro método el cual nos permite una mayor facilidad de asignar un nuevo id.
+¿Qué hace la función snowflake?
+    R: Crea id únicos usando un algoritmo espeçifico de esta fuunción. 
+¿Cómo crees que descifraremos la contraseña posteriormente?
+    R: Se decifra la contraseña usando la llave privada. 
+¿Por qué recibimos pasamos passwd y passwd2?
+    R: Lo usamos como verfificación de que las contraseñas sean iguales. 
+¿Cómo validamos que se reciban todos los datos necesarios?
+     R: Revisando que no esté ningún espacio vacío. 
+Explica en qué parte del código mandamos el mensaje de error.
+    R: for key in keys:
+            if not key in r:
+                return '{"msg":"missing' +f'"{key}"'+'}',409
+¿En qué parte del código manejamos la contraseña duplicada?
+    R: if (r["passwd"] != r["passwd2"]):
+            return '{"msg":"password not match"}', 409
+¿Por qué la contraseña tiene un valor diferente al que mandamos en el request?
+    R: Porque es pasada por un proceso de cifrado antes de estar en la base de datos.
+¿Por qué revisamos si hay un archivo generado?
+    R: Para saber si el usuario ya está dado de alta anteriormente
+¿Dónde generamos un archivo?
+    R: with open(path+"/"+f"{self.user.id}.json", 'w') as file:
+            json.dump(vars(self.user), file)
+¿Cuál es el valor que se asigna como nombre al archivo?
+    R: El Id
+¿Cómo evitamos guardar la contraseña en el archivo?
+R: Agregando una cadena vacía para indicar que hay algo, pero no es absolutamente nada. 
+¿Cómo hacemos el descifrado de la contraseña guardada en la base de datos?
+R: Con ayuda de la llave privada del servidor.
+¿Cómo válidas que te pasen los datos requeridos para el logueo?
+    R:authKeys=["email","passwd"]
+        for key in authKeys:
+            if not key in r:
+                return '{"msg":"missing' +f'{key}"'+'}',401
+¿Qué devuelve la función?
+    R: Un objeto Json
+¿Cómo usarías el valor devuelto?
+    R: Usándola como parámetros
+Al marcarte que no tienes acceso agrega lo siguiente al final de la url ?authKey= y el id del usuario previamente
+    creado, explica qué sucedió
+    R: Da el acceso y como los ejemplos anteriores nos brinda la información que está almacenada en la base de datos. 
