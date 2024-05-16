@@ -3,9 +3,11 @@ import os
 import json
 import time
 
+
 class CtrlMain:
     config = json.load( open('./config.json'))
-    
+    auth = config ['auth']
+
     conn = mysqlConn(config["database"])
 
     def snowflake(self):
@@ -36,3 +38,11 @@ class CtrlMain:
         # Generate Snowflake ID
         snowflake_id = (timestamp << (self.config["snowflake"]["NODE_ID_BITS"] + self.config["snowflake"]["SEQUENCE_BITS"])) | (self.config["snowflake"]["SERVER"] << self.config["snowflake"]["SEQUENCE_BITS"]) | sequence
         return hex(snowflake_id)[2:]
+    
+    def kerberos(self,id):
+        path = self.auth["path"]
+        #validar base de datos
+        if (os.path.exists(path+"/"+str(id)+".json")):
+            return True
+        else:
+            return False

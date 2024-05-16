@@ -66,3 +66,14 @@ CREATE TABLE product_estampado(
 	FOREIGN KEY (productId) REFERENCES product(id),
 	FOREIGN KEY (estampadoId) REFERENCES estampado(id)
 );
+
+CREATE TABLE users(
+	id varchar(16) PRIMARY KEY,
+	name varchar (250),
+	user varchar (30),
+	email varchar (70) unique,
+	status numeric,
+	type numeric,
+	passwd varchar (532)
+
+);
